@@ -1,7 +1,8 @@
 import React from "react";
-
 import { useForm, SubmitHandler } from "react-hook-form";
 import googleIcon from "../assets/google.svg";
+import { useAppDispatch } from "../redux/store";
+import { login } from "../redux/userSlice";
 
 type Inputs = {
   email: string;
@@ -19,6 +20,12 @@ const Login: React.FC<IProps> = ({ setIsLogin }) => {
     watch,
     formState: { errors },
   } = useForm<Inputs>();
+
+  const dispatch = useAppDispatch();
+
+  const clickHandler = async (authType: string) => {
+    dispatch(login(authType));
+  };
 
   const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
   return (
@@ -43,7 +50,7 @@ const Login: React.FC<IProps> = ({ setIsLogin }) => {
         Sign In
       </button>
       <p>
-        You don't have an account!{" "}
+        You don't have an account!
         <strong
           onClick={(e) => setIsLogin(false)}
           className="text-red-400 decoration-solid underline cursor-pointer"
@@ -54,7 +61,10 @@ const Login: React.FC<IProps> = ({ setIsLogin }) => {
       <div className="w-full">
         <hr className="overflow-visible after:content-['§'] after:px-4 after:bg-[#fff] after:relative after:top-[-13px] h-[5px] border-double border-t-[3px] border-black text-center" />
       </div>
-      <button className="transition ease-in-out duration-100 hover:scale-105 w-full h-8 shadow-final flex justify-center items-center p-5 rounded-md">
+      <button
+        onClick={(e) => clickHandler("google")}
+        className="transition ease-in-out duration-100 hover:scale-105 w-full h-8 shadow-final flex justify-center items-center p-5 rounded-md"
+      >
         <img src={googleIcon} width="24px" height="24px" />
       </button>
     </form>

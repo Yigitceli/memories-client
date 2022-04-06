@@ -32,6 +32,7 @@ function Auth() {
           <Register setIsLogin={setIsLogin} />
         )}
       </div>
+      
     </div>
   );
 }
