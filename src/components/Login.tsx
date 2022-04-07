@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
 import googleIcon from "../assets/google.svg";
-import { useAppDispatch } from "../redux/store";
-import { login } from "../redux/userSlice";
+import { RootState, useAppDispatch } from "../redux/store";
+import { login, setError } from "../redux/userSlice";
+import { ILoginBody } from "../types";
 
 type Inputs = {
   email: string;
@@ -14,6 +16,8 @@ interface IProps {
 }
 
 const Login: React.FC<IProps> = ({ setIsLogin }) => {
+  const { error } = useSelector((state: RootState) => state.user);
+
   const {
     register,
     handleSubmit,
@@ -23,30 +27,78 @@ const Login: React.FC<IProps> = ({ setIsLogin }) => {
 
   const dispatch = useAppDispatch();
 
-  const clickHandler = async (authType: string) => {
-    dispatch(login(authType));
+  useEffect(() => {
+    dispatch(setError());
+  }, []);
+
+  const clickHandler = async (authType: "custom" | "google") => {
+    dispatch(login({ authType }));
   };
 
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<Inputs> = (data: ILoginBody) =>
+    dispatch(login({ authType: "custom", data }));
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
       className="gap-8 p-2 w-full flex flex-col justify-around items-center"
     >
+      {errors.email?.type == "required" && (
+        <p className="text-red-700 font-bold w-full text-left text-sm">
+          *Email is required.
+        </p>
+      )}
+      {errors.email?.type == "pattern" && (
+        <p className="text-red-700 font-bold w-full text-left text-sm">
+          *Please type a valid email.
+        </p>
+      )}
       <input
-        className="w-full border-2 p-2"
+        className={
+          errors.email
+            ? "placeholder:text-red-700 w-full border-2 p-2 border-red-700 outline-red-700"
+            : "w-full border-2 p-2"
+        }
         placeholder="Email"
-        {...(register("email"), { required: true })}
+        {...register("email", {
+          required: true,
+          pattern:
+            /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
+        })}
       />
 
+      {errors.password?.type == "required" && (
+        <p className="text-red-700 font-bold w-full text-left text-sm">
+          *Password is required.
+        </p>
+      )}
+
       <input
-        className="w-full border-2 p-2"
+        className={
+          errors.password
+            ? "placeholder:text-red-700 w-full border-2 p-2 border-red-700 outline-red-700"
+            : "w-full border-2 p-2"
+        }
         placeholder="Password"
         type={"password"}
-        {...register("password", { required: true })}
+        {...register("password", {
+          required: true,
+        })}
       />
+      {error === 401 && (
+        <p className="text-red-700 font-bold w-full text-left text-sm">
+          *Email or password is wrong!
+        </p>
+      )}
+      {error === 500 && (
+        <p className="text-red-700 font-bold w-full text-left text-sm">
+          *Something gone wrong! Try again later!
+        </p>
+      )}
 
-      <button className="transition ease-in-out duration-100 w-24 bg-red-400 p-2 rounded-md font-bold hover:scale-105">
+      <button
+        type="submit"
+        className="transition ease-in-out duration-100 w-24 bg-red-400 p-2 rounded-md font-bold hover:scale-105"
+      >
         Sign In
       </button>
       <p>

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { signInWithPopup } from "firebase/auth";
 import { auth, provider } from "./firebase";
-import { IUserBody } from "./types";
+import { ILoginBody, IUserBody } from "./types";
 
 export const setAccessToken = (accessToken: string): void => {
   window.localStorage.setItem("accessToken", accessToken);
@@ -22,29 +22,40 @@ export const getAuthType = (): string | null => {
   return window.localStorage.getItem("authType");
 };
 
-export const googleSignIn = async (): Promise<IUserBody | null> => {
-  try {
-    const data = await signInWithPopup(auth, provider);
-    const userBody: IUserBody = {
-      userId: data.user.uid,
-      email: data.user.email,
-      photoUrl: data.user.photoURL,
-      displayName: data.user.displayName,
-      authType: "google",
-    };
-    setRefreshToken(data.user.refreshToken);
-    setAccessToken(await data.user.getIdToken());
-    setAuthType("google");
-    const response = await axios.post(
-      `http://localhost:5000/api/user/login?authType=${getAuthType()}`,
-      { userData: userBody }
-    );
-    const userData: IUserBody = response.data.payload;
-    return userData;
-  } catch (error) {
-    setRefreshToken("");
-    setAccessToken("");
-    setAuthType("");
-    return null;
-  }
+export const googleSignIn = async (): Promise<IUserBody> => {
+  const data = await signInWithPopup(auth, provider);
+  const userBody: IUserBody = {
+    userId: data.user.uid,
+    email: data.user.email,
+    photoUrl: data.user.photoURL,
+    displayName: data.user.displayName,
+    authType: "google",
+  };
+  setRefreshToken(data.user.refreshToken);
+  setAccessToken(await data.user.getIdToken());
+  setAuthType("google");
+  const response = await axios.post(
+    `http://localhost:5000/api/user/login?authType=${getAuthType()}`,
+    { userData: userBody }
+  );
+  const userData: IUserBody = response.data.payload;
+  return userData;
 };
+
+export const customSignIn = async (
+  data: ILoginBody | undefined
+): Promise<IUserBody> => {
+  const response = await axios.post(
+    "http://localhost:5000/api/user/login?authType=custom",
+    { userData: data }
+  );
+  const { accessToken, refreshToken, UserData } = response.data.payload;
+  setAccessToken(accessToken);
+  setRefreshToken(refreshToken);
+  setAuthType("custom");
+  return UserData as IUserBody;
+};
+
+export function firstLetterUpperCase(value: string) {
+  return value.slice(0, 1).toUpperCase() + value.slice(1).toLowerCase();
+}
