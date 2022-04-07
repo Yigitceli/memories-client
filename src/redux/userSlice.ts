@@ -2,7 +2,16 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios, { AxiosError } from "axios";
 
 import { ILoginBody, IUserBody } from "../types";
-import { customSignIn, googleSignIn } from "../utils";
+import {
+  customSignIn,
+  googleSignIn,
+  removeAccessToken,
+  removeAuthType,
+  removeRefreshToken,
+  setAccessToken,
+  setAuthType,
+  setRefreshToken,
+} from "../utils";
 
 interface IState {
   data: IUserBody | null | undefined;
@@ -33,6 +42,9 @@ export const login = createAsyncThunk<
         return customData;
       }
     } catch (error) {
+      removeAccessToken();
+      removeRefreshToken();
+      removeAuthType();
       const err = error as AxiosError;
       const errorCode: 401 | 500 | undefined = err.response?.status as
         | 401
@@ -54,6 +66,9 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     logOut: (state) => {
+      removeAccessToken();
+      removeRefreshToken();
+      removeAuthType();
       (state.data = null), (state.loading = "idle");
     },
     setError: (state) => {

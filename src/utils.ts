@@ -22,6 +22,16 @@ export const getAuthType = (): string | null => {
   return window.localStorage.getItem("authType");
 };
 
+export const removeAccessToken = (): void => {
+  window.localStorage.removeItem("accessToken");
+};
+export const removeRefreshToken = (): void => {
+  window.localStorage.removeItem("refreshToken");
+};
+export const removeAuthType = (): void => {
+  window.localStorage.removeItem("authType");
+};
+
 export const googleSignIn = async (): Promise<IUserBody> => {
   const data = await signInWithPopup(auth, provider);
   const userBody: IUserBody = {
