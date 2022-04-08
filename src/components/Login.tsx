@@ -114,6 +114,7 @@ const Login: React.FC<IProps> = ({ setIsLogin }) => {
         <hr className="overflow-visible after:content-['§'] after:px-4 after:bg-[#fff] after:relative after:top-[-13px] h-[5px] border-double border-t-[3px] border-black text-center" />
       </div>
       <button
+        type="button"
         onClick={(e) => clickHandler("google")}
         className="transition ease-in-out duration-100 hover:scale-105 w-full h-8 shadow-final flex justify-center items-center p-5 rounded-md"
       >

@@ -45,10 +45,12 @@ export const googleSignIn = async (): Promise<IUserBody> => {
   setAccessToken(await data.user.getIdToken());
   setAuthType("google");
   const response = await axios.post(
-    `http://localhost:5000/api/user/login?authType=${getAuthType()}`,
+    `http://localhost:5000/api/user/login?authType=google`,
     { userData: userBody }
   );
+  console.log(response);
   const userData: IUserBody = response.data.payload;
+
   return userData;
 };
 

@@ -34,7 +34,7 @@ export const login = createAsyncThunk<
   ) => {
     try {
       if (authType === "google") {
-        const googleData = await googleSignIn();
+        const googleData = await googleSignIn();       
         return googleData;
       }
       if (authType === "custom") {
