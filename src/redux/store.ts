@@ -12,6 +12,7 @@ import {
   PURGE,
   REGISTER,
 } from "redux-persist";
+import memoriesSlice from "./memoriesSlice";
 
 const persistConfig = {
   key: "user",
@@ -23,6 +24,7 @@ const persistedUserReducer = persistReducer(persistConfig, userSlice);
 const store = configureStore({
   reducer: {
     user: persistedUserReducer,
+    memories: memoriesSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
