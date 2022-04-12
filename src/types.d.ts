@@ -42,7 +42,6 @@ export interface IMemory {
 }
 
 export interface IMemoryPost {
-  author: IMemoryAuthor;
   tags: string[];
   memoryPhotoUrl: string;
   memoryTitle: string;

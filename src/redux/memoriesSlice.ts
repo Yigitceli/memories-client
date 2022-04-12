@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios, { AxiosError } from "axios";
+import AuthInstance from "../AxiosAuth";
 import {
   IMemory,
   IMemoryAuthor,
@@ -9,28 +10,25 @@ import {
 } from "../types";
 import { RootState } from "./store";
 
-export const fetchMemories = createAsyncThunk<
+export const postMemory = createAsyncThunk<
   IMemory[] | undefined,
   InputData,
   { rejectValue: 404 | 500 | undefined; state: RootState }
 >(
-  "memories/fetchMemories",
+  "memories/postMemory",
   async (data: InputData, { rejectWithValue, getState }) => {
     try {
-      const user: IUserBody | null | undefined = getState().user.data;
-      const postAuthor: IMemoryAuthor = {
-        userId: user?.userId!,
-        displayName: user?.displayName!,
-        email: user?.email!,
-        photoUrl: user?.photoUrl!,
-      };
       const postData: IMemoryPost = {
-        author: postAuthor,
         tags: data.tags,
         memoryMessage: data.message,
         memoryPhotoUrl: data.image,
         memoryTitle: data.title,
       };
+      const response = await AuthInstance.post(
+        "memory",
+        postData
+      );
+      
     } catch (error) {
       const err = error as AxiosError;
       const errorCode: 404 | 500 | undefined = err.response?.status as

@@ -4,7 +4,7 @@ import "@pathofdev/react-tag-input/build/index.css";
 import "../reactTagInput.css";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useAppDispatch } from "../redux/store";
-import { fetchMemories } from "../redux/memoriesSlice";
+import { postMemory } from "../redux/memoriesSlice";
 import { InputData } from "../types";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { memoriesRef } from "../firebaseSetup";
@@ -95,12 +95,12 @@ function Create() {
               tags: tags,
               title: data.title,
             };
-            dispatch(fetchMemories(finalData));
+            dispatch(postMemory(finalData));
             setTagsErros(false);
             reset();
             setTags(["Example Tag"]);
             setUploading(null);
-            document.location.reload();
+            setPreview(null);
           });
         }
       );

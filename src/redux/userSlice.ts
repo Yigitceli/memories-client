@@ -47,8 +47,7 @@ export const login = createAsyncThunk<
       removeAuthType();
       const err = error as AxiosError;
       const errorCode: 401 | 500 | undefined = err.response?.status as
-        | 401
-        | 500
+        | 401      | 500
         | undefined;
       return rejectWithValue(errorCode);
     }
