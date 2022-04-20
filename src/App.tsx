@@ -12,23 +12,8 @@ import { logOut } from "./redux/userSlice";
 
 function App() {
   const { data } = useSelector((state: RootState) => state.user);
-  const navigate = useNavigate()
-  const dispatch = useAppDispatch();
 
-  const checkAuth = async () => {
-    try {
-      await axios.post(`http://localhost:5000/api/user/refresh-token`, {
-        refreshToken: getRefreshToken(),
-      });
-    } catch (error) {
-      dispatch(logOut())
-      navigate('/auth')
-    }
-  };
 
-  useEffect(() => {
-    checkAuth()
-  }, []);
 
   return (
     <div className="App p-4 relative w-100 h-screen flex flex-col ">

@@ -1,15 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ReactTagInput from "@pathofdev/react-tag-input";
 import "@pathofdev/react-tag-input/build/index.css";
 import "../reactTagInput.css";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useAppDispatch } from "../redux/store";
-import { postMemory } from "../redux/memoriesSlice";
+import { RootState, useAppDispatch } from "../redux/store";
+import { getMemory, postMemory } from "../redux/memoriesSlice";
 import { InputData } from "../types";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { memoriesRef } from "../firebaseSetup";
 import { useNavigate } from "react-router-dom";
 import UploadingScreen from "./UploadingScreen";
+import { useSelector } from "react-redux";
 
 type Inputs = {
   title: string;
@@ -38,6 +39,7 @@ function Create() {
   const [tagsError, setTagsErros] = useState<boolean>(false);
   const [preview, setPreview] = useState<null | string>(null);
   const [uploading, setUploading] = useState<null | number>(null);
+  const userData = useSelector((state: RootState) => state.user);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -62,48 +64,55 @@ function Create() {
     clearErrors();
   };
 
+
+
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    if (tags.length < 1) {
-      setTagsErros(true);
+    if (!userData.data) {
+      navigate("auth");
+      return;
     } else {
-      const uploadTask = uploadBytesResumable(
-        memoriesRef(data.title),
-        data.image[0]
-      );
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          const progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          setUploading(progress);
-          switch (snapshot.state) {
-            case "paused":
-              console.log("Upload is paused");
-              break;
-            case "running":
-              console.log("Upload is running");
-              break;
+      if (tags.length < 1) {
+        setTagsErros(true);
+      } else {
+        const uploadTask = uploadBytesResumable(
+          memoriesRef(data.title),
+          data.image[0]
+        );
+        uploadTask.on(
+          "state_changed",
+          (snapshot) => {
+            const progress =
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            setUploading(progress);
+            switch (snapshot.state) {
+              case "paused":
+                console.log("Upload is paused");
+                break;
+              case "running":
+                console.log("Upload is running");
+                break;
+            }
+          },
+          (error) => {},
+          () => {
+            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+              const imageUrl = downloadURL;
+              const finalData: InputData = {
+                image: imageUrl,
+                message: data.message,
+                tags: tags,
+                title: data.title,
+              };
+              dispatch(postMemory(finalData));
+              setTagsErros(false);
+              reset();
+              setTags(["Example Tag"]);
+              setUploading(null);
+              setPreview(null);             
+            });
           }
-        },
-        (error) => {},
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            const imageUrl = downloadURL;
-            const finalData: InputData = {
-              image: imageUrl,
-              message: data.message,
-              tags: tags,
-              title: data.title,
-            };
-            dispatch(postMemory(finalData));
-            setTagsErros(false);
-            reset();
-            setTags(["Example Tag"]);
-            setUploading(null);
-            setPreview(null);
-          });
-        }
-      );
+        );
+      }
     }
   };
 
