@@ -4,7 +4,7 @@ import "@pathofdev/react-tag-input/build/index.css";
 import "../reactTagInput.css";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { RootState, useAppDispatch } from "../redux/store";
-import { getMemory, postMemory } from "../redux/memoriesSlice";
+import { postMemory } from "../redux/memoriesSlice";
 import { InputData } from "../types";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { memoriesRef } from "../firebaseSetup";
@@ -64,8 +64,6 @@ function Create() {
     clearErrors();
   };
 
-
-
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     if (!userData.data) {
       navigate("auth");
@@ -75,7 +73,7 @@ function Create() {
         setTagsErros(true);
       } else {
         const uploadTask = uploadBytesResumable(
-          memoriesRef(data.title),
+          memoriesRef(Date.now().toString() + data.title),
           data.image[0]
         );
         uploadTask.on(
@@ -108,7 +106,7 @@ function Create() {
               reset();
               setTags(["Example Tag"]);
               setUploading(null);
-              setPreview(null);             
+              setPreview(null);
             });
           }
         );
