@@ -13,25 +13,53 @@ import store, { RootState, useAppDispatch } from "./redux/store";
 import Dashboard from "./pages/Dashboard";
 import axios from "axios";
 import { interceptor } from "./AxiosAuth";
-import { getRefreshToken } from "./utils";
+import { getAuthType, getRefreshToken } from "./utils";
 import { logOut } from "./redux/userSlice";
+import MemoryPage from "./pages/MemoryPage";
 
 function App() {
   const { data } = useSelector((state: RootState) => state.user);
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
+  const checkRefresh = async () => {
+    if (getRefreshToken()) {
+      const authType: string = getAuthType() as string;
+      try {
+        await axios.post(
+          "http://localhost:5000/api/user/refresh-token",
+          {
+            refreshToken: getRefreshToken(),
+          },
+          {
+            headers: {
+              authType,
+            },
+          }
+        );
+      } catch (error) {
+        dispatch(logOut());
+        navigate("/auth");
+      }
+    }
+  };
+
+  useEffect(() => {
+    checkRefresh();
+  }, []);
 
   return (
-    <div className="App relative w-full h-screen flex flex-col">
-      <div className="w-full h-full p-4 overflow-hidden">
-        <BrowserRouter>
-          <NavBar />
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route
-              path="/auth"
-              element={data ? <Navigate to="/" replace /> : <Auth />}
-            />
-          </Routes>
-        </BrowserRouter>
+    <div className="App relative w-full h-screen flex">
+      <div className="w-full h-full flex flex-col overflow-hidden">
+        <NavBar />
+        <Routes>
+          <Route path="/" element={<Dashboard />} />
+          <Route
+            path="/auth"
+            element={data ? <Navigate to="/" replace /> : <Auth />}
+          />
+          <Route path="/:id" element={<MemoryPage />} />
+        </Routes>
       </div>
     </div>
   );

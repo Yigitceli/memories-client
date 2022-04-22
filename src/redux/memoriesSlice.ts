@@ -44,13 +44,12 @@ export const getMemories = createAsyncThunk<
 >(
   "memories/getMemories",
   async ({ page = 0, limit = 5 }, { rejectWithValue }) => {
-    try {
-      console.log(page);
+    try {      
       const response = await axios.get(
         `http://localhost:5000/api/memory?page=${page}&limit=${limit}`
       );
       const data: IMemory[] = response.data.payload;
-      console.log(data);
+      
       return data;
     } catch (error) {
       const err = error as AxiosError;

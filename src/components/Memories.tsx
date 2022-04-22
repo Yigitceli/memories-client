@@ -39,7 +39,7 @@ function Memories() {
   }, [page]);
 
   return (
-    <div className="w-full px-4 overflow-auto h-[90%] flex flex-col relative">
+    <div className="w-full px-4 overflow-auto h-full flex flex-col relative">
       <div className="w-full flex-wrap flex">
         {data && data.map((data, index) => <Memory data={data} key={index} />)}
       </div>
@@ -56,7 +56,7 @@ function Memories() {
 
         {error == 404 && <p>There is no more Memory!</p>}
       </div>
-      <div ref={loader} />
+      {error != 404 && <div ref={loader} />}
     </div>
   );
 }

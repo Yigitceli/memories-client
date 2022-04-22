@@ -13,6 +13,7 @@ import {
   REGISTER,
 } from "redux-persist";
 import memoriesSlice from "./memoriesSlice";
+import memoryPageSlice from "./memoryPageSlice";
 
 const persistConfig = {
   key: "user",
@@ -25,6 +26,7 @@ const store = configureStore({
   reducer: {
     user: persistedUserReducer,
     memories: memoriesSlice,
+    memory: memoryPageSlice
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
