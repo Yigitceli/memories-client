@@ -45,6 +45,10 @@ export interface IMemory {
   like: ILikeAuthor[];
 }
 
+export interface IMemoryPage extends IMemory {
+  likeMemories: IMemory[];
+}
+
 export interface ILikeAuthor {
   userId: string;
   displayName: string;

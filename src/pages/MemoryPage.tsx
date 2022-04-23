@@ -51,10 +51,10 @@ const MemoryPage = () => {
   };
 
   return (
-    <div className="w-full h-full p-4 flex">
-      <div className="shadow-final w-full h-full rounded-3xl flex flex-col">
+    <div className="w-full h-[90%] p-4 ">
+      <div className="shadow-final w-full h-full overflow-hidden rounded-3xl flex flex-col">
         <ShowMemoryPage>
-          <div className="w-full h-1/2 p-4 flex gap-2 ">
+          <div className="w-full h-1/2 p-4 flex gap-2">
             <div className="w-1/2 h-full flex flex-col gap-2">
               <div className="flex flex-col gap-2">
                 <h1 className="font-semibold text-4xl">{data?.memoryTitle}</h1>
@@ -65,7 +65,7 @@ const MemoryPage = () => {
                 </div>
                 <p>{data?.memoryMessage}</p>
                 <p className="font-semibold text-lg">
-                  Created by: ${data?.author.displayName}
+                  Created by: {data?.author.displayName}
                 </p>
                 <p>
                   {new Date(data?.createdAt.toString() as string).toUTCString()}
@@ -89,7 +89,7 @@ const MemoryPage = () => {
                           <hr className="w-full my-1" />
                         </div>
                       );
-                    })}                    
+                    })}
                   </div>
                   <form
                     onSubmit={handleSubmit(onSubmit)}
@@ -109,13 +109,24 @@ const MemoryPage = () => {
                 <hr className="my-2" />
               </div>
             </div>
-            <div className="w-1/2 h-full  flex items-center justify-center">
-              <img src={data?.memoryPhotoUrl} className="max-h-full" />
+            <div className="w-1/2 flex items-center justify-center overflow-hidden">
+              <img src={data?.memoryPhotoUrl} />
             </div>
           </div>
-          <div className="w-full h-full  flex flex-col p-3 gap-2 ">
+          <div className="w-full h-1/2 flex flex-col p-3 gap-2 ">
             <p className=" text-xl">You might also like:</p>
-            <hr className="my-1" />
+            <hr className="my-1 hidden lg:block" />
+            <div className="h-full gap-2 overflow-auto w-full flex flex-col">
+              {data?.likeMemories.map((memory) => (
+                <div className="w-full flex flex-col gap-1">
+                  <h2 className="font-semibold">{memory.memoryTitle}</h2>
+                  <p>{memory.author.displayName}</p>
+                  <p>{memory.memoryMessage}</p>
+                  <p>Likes: {memory.like.length}</p>
+                  <img className="w-44" src={memory.memoryPhotoUrl} />
+                </div>
+              ))}
+            </div>
           </div>
         </ShowMemoryPage>
       </div>

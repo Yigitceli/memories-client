@@ -3,16 +3,12 @@ import axios, { AxiosError } from "axios";
 import { Action } from "history";
 import AuthInstance from "../AxiosAuth";
 import {
-  IMemory,
-  IMemoryAuthor,
-  IMemoryPost,
-  InputData,
-  IUserBody,
+  IMemoryPage,
 } from "../types";
 import { RootState } from "./store";
 
 interface IState {
-  data: IMemory | null | undefined;
+  data: IMemoryPage | null | undefined;
   loading: "pending" | "success" | "rejected" | "idle";
   error: undefined | 404 | 500;
 }
@@ -24,13 +20,13 @@ const initialState: IState = {
 };
 
 export const fetchMemory = createAsyncThunk<
-  IMemory,
+  IMemoryPage,
   { id: string },
   { rejectValue: 404 | 500 | undefined }
 >("memoryPageSlice/fetchMemory", async ({ id }, { rejectWithValue }) => {
   try {
     const response = await axios.get(`http://localhost:5000/api/memory/${id}`);
-    const data: IMemory = response.data.payload;
+    const data: IMemoryPage = response.data.payload;
     return data;
   } catch (error) {
     const err = error as AxiosError;
@@ -54,7 +50,7 @@ const memorySlice = createSlice({
     });
     builder.addCase(
       fetchMemory.fulfilled,
-      (state, action: PayloadAction<IMemory>) => {
+      (state, action: PayloadAction<IMemoryPage>) => {
         state.data = action.payload;
         state.loading = "idle";
         state.error = undefined;

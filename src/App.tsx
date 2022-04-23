@@ -49,8 +49,8 @@ function App() {
   }, []);
 
   return (
-    <div className="App relative w-full h-screen flex">
-      <div className="w-full h-full flex flex-col overflow-hidden">
+    <div className="App relative w-full h-screen">
+      <div className="w-full h-screen flex flex-col overflow-hidden">
         <NavBar />
         <Routes>
           <Route path="/" element={<Dashboard />} />

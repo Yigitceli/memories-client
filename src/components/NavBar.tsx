@@ -35,7 +35,7 @@ const NavBar = () => {
   }, []);
 
   return (
-    <div className="px-4 w-full">
+    <div className="px-4 w-full h-24">
       <div className={pathname != "/auth" ? navbar : authNavbar}>
         <Link to={"/"}>
           <img
