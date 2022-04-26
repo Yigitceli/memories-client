@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios, { AxiosError } from "axios";
 import AuthInstance from "../AxiosAuth";
 import {
+  ILikeAuthor,
   IMemory,
   IMemoryAuthor,
   IMemoryPost,
@@ -37,6 +38,51 @@ export const postMemory = createAsyncThunk<
   }
 );
 
+export const deleteMemory = createAsyncThunk<
+  string,
+  string,
+  { rejectValue: 404 | 500 | undefined; state: RootState }
+>(
+  "memories/deleteMemory",
+  async (memoryId: string, { rejectWithValue, getState, dispatch }) => {
+    try {
+      const response = await AuthInstance.delete(`/memory/${memoryId}`);
+      return memoryId;
+    } catch (error) {
+      const err = error as AxiosError;
+      const errorCode: 404 | 500 | undefined = err.response?.status as
+        | 404
+        | 500
+        | undefined;
+      return rejectWithValue(errorCode);
+    }
+  }
+);
+
+export const likeMemory = createAsyncThunk<
+  IMemory,
+  string,
+  { rejectValue: 404 | 500 | undefined; state: RootState }
+>(
+  "memories/likeMemory",
+  async (memoryId, { rejectWithValue, getState, dispatch }) => {
+    try {
+      const { data } = await AuthInstance.put(`/memory/${memoryId}/like`);
+
+      const newMemory: IMemory = data.payload as IMemory;
+
+      return newMemory;
+    } catch (error) {
+      const err = error as AxiosError;
+      const errorCode: 404 | 500 | undefined = err.response?.status as
+        | 404
+        | 500
+        | undefined;
+      return rejectWithValue(errorCode);
+    }
+  }
+);
+
 export const getMemories = createAsyncThunk<
   IMemory[],
   { page?: number; limit?: number },
@@ -44,12 +90,12 @@ export const getMemories = createAsyncThunk<
 >(
   "memories/getMemories",
   async ({ page = 0, limit = 5 }, { rejectWithValue }) => {
-    try {      
+    try {
       const response = await axios.get(
         `http://localhost:5000/api/memory?page=${page}&limit=${limit}`
       );
       const data: IMemory[] = response.data.payload;
-      
+
       return data;
     } catch (error) {
       const err = error as AxiosError;
@@ -109,6 +155,38 @@ const memoriesSlice = createSlice({
         }
         state.loading = "success";
         state.error = undefined;
+      }
+    );
+    builder.addCase(
+      deleteMemory.pending,
+      (state, action: PayloadAction<IMemory[] | undefined>) => {
+        state.loading = "pending";
+        state.error = undefined;
+      }
+    );
+    builder.addCase(deleteMemory.rejected, (state, action) => {
+      state.loading = "rejected";
+      state.error = action.payload;
+    });
+    builder.addCase(
+      deleteMemory.fulfilled,
+      (state, action: PayloadAction<string>) => {
+        state.data = state.data?.filter(
+          (memory) => memory._id != action.payload
+        );
+        state.loading = "success";
+        state.error = undefined;
+      }
+    );
+    builder.addCase(
+      likeMemory.fulfilled,
+      (state, action: PayloadAction<IMemory>) => {
+        const memoryIndex = state.data?.findIndex((memory) => {
+          return memory._id == action.payload._id;
+        });
+        if (state.data) {
+          state.data[memoryIndex!] = action.payload;
+        }
       }
     );
   },

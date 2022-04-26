@@ -5,10 +5,12 @@ import { AiFillLike } from "react-icons/ai";
 import { AiFillDelete } from "react-icons/ai";
 import { BsThreeDots } from "react-icons/bs";
 import Img from "react-cool-img";
-import { IMemory } from "../types";
+import { ILikeAuthor, IMemory } from "../types";
 import { useSelector } from "react-redux";
-import { RootState } from "../redux/store";
+import { RootState, useAppDispatch } from "../redux/store";
 import { Link } from "react-router-dom";
+import authAxios from "../AxiosAuth";
+import { deleteMemory, likeMemory } from "../redux/memoriesSlice";
 
 interface IProps {
   data: IMemory;
@@ -16,11 +18,28 @@ interface IProps {
 
 const Memory: React.FC<IProps> = ({ data }) => {
   const userData = useSelector((state: RootState) => state.user.data);
+  const dispatch = useAppDispatch();
 
   const checkLiked = useMemo(
     () => data.like.some((user) => user.userId == userData?.userId),
     [data]
   );
+
+  const clickDeleteHandler = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dispatch(deleteMemory(data._id));
+  };
+
+  const clickLikeHandler = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dispatch(likeMemory(data._id));
+  };
 
   return (
     <Link to={`/${data._id}`}>
@@ -53,7 +72,10 @@ const Memory: React.FC<IProps> = ({ data }) => {
             {data.memoryMessage}
           </p>
           <div className="w-full flex justify-between">
-            <button className="flex  items-center gap-1 font-semibold text-md text-blue-500 ease-in-out translate-all duration-100 hover:scale-105">
+            <button
+              onClick={clickLikeHandler}
+              className="flex  items-center gap-1 font-semibold text-md text-blue-500 ease-in-out translate-all duration-100 hover:scale-105"
+            >
               {checkLiked ? (
                 <AiFillLike fontSize={18} />
               ) : (
@@ -62,7 +84,10 @@ const Memory: React.FC<IProps> = ({ data }) => {
               {data.like.length} LIKE
             </button>
             {data.author.userId == userData?.userId && (
-              <button className="text-md flex items-center font-semibold  gap-1 text-[#f50057] ease-in-out translate-all duration-100 hover:scale-105">
+              <button
+                onClick={clickDeleteHandler}
+                className="text-md flex items-center font-semibold  gap-1 text-[#f50057] ease-in-out translate-all duration-100 hover:scale-105"
+              >
                 <AiFillDelete fontSize={18} />
                 DELETE
               </button>

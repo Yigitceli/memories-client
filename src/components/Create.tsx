@@ -149,6 +149,7 @@ function Create() {
         >
           <input
             type={"file"}
+            accept="image/*"
             id="imageInput"
             className="opacity-0 absolute w-full h-full cursor-pointer"
             {...register("image", { required: true })}
