@@ -5,11 +5,18 @@ import Memory from "./Memory";
 import InfiniteScroll from "react-infinite-scroller";
 import { getMemories, pageUp } from "../redux/memoriesSlice";
 import ReactLoading from "react-loading";
+import { useLocation } from "react-router-dom";
 
-function Memories() {
+interface IProps {
+  search: string;
+}
+
+const Memories: React.FC<IProps> = ({ search }) => {
   const { data, page, loading, error } = useSelector(
     (state: RootState) => state.memories
   );
+  const location = useLocation();
+
   const dispatch = useAppDispatch();
   const parentDivRef = useRef(null);
   const loader = useRef(null);
@@ -32,14 +39,24 @@ function Memories() {
   }, [handleObserver]);
 
   useEffect(() => {
-    if (page > 0) {
-      console.log(page);
+    if (location.search) {
+      dispatch(getMemories({ page, search: location.search.slice(8) }));
+    }
+  }, [page, location.search]);
+
+  useEffect(() => {
+    if (!location.search) {
       dispatch(getMemories({ page }));
     }
-  }, [page]);
+  }, [page, location.key]);
+
+  useEffect(() => {
+    console.log(error);
+  }, [error]);
 
   return (
     <div className="w-full px-4 overflow-auto h-full flex flex-col relative">
+      <p className="my-2 text-lg font-bold w-full text-center">Scroll Down To Fetch More</p>
       <div className="w-full flex-wrap flex">
         {data && data.map((data, index) => <Memory data={data} key={index} />)}
       </div>
@@ -54,11 +71,11 @@ function Memories() {
           />
         )}
 
-        {error == 404 && <p>There is no more Memory!</p>}
+        {error && <p>There is no more Memory!</p>}
+        <div ref={loader} />
       </div>
-      {error != 404 && <div ref={loader} />}
     </div>
   );
-}
+};
 
 export default Memories;

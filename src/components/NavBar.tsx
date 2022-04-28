@@ -1,10 +1,11 @@
 import memoriesTitle from "../assets/title.png";
-import { useLocation, Link } from "react-router-dom";
+import { useLocation, Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, useAppDispatch } from "../redux/store";
 import { logOut } from "../redux/userSlice";
 import { useEffect, useState } from "react";
 import ReactLoading from "react-loading";
+import { dataReset } from "../redux/memoriesSlice";
 
 const authNavbar =
   "relative my-4 z-10 bg-white py-2 px-14 text-white flex items-center shadow-final w-full rounded-lg justify-center";
@@ -16,8 +17,10 @@ const NavBar = () => {
   const pathname = useLocation().pathname;
   const { data } = useSelector((state: RootState) => state.user);
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   let timer: ReturnType<typeof setTimeout>;
+
   const logOutHandler = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
@@ -30,6 +33,11 @@ const NavBar = () => {
     timer = setTimeout(setDisactivateAuthLoadling, 1000);
   };
 
+  const clickHandler = () => {
+    dispatch(dataReset());
+    navigate("/");
+  };
+
   useEffect(() => {
     return () => clearTimeout(timer);
   }, []);
@@ -37,12 +45,12 @@ const NavBar = () => {
   return (
     <div className="px-4 w-full h-24">
       <div className={pathname != "/auth" ? navbar : authNavbar}>
-        <Link to={"/"}>
+        <button onClick={clickHandler}>
           <img
             src={memoriesTitle}
             className="transition ease-in-out duration-100 hover:scale-110 cursor-pointer w-[250px]"
           />
-        </Link>
+        </button>
         {isAuthLoading && (
           <div className="fixed bg-opacity z-30 w-full h-screen flex items-center justify-center inset-0">
             <ReactLoading

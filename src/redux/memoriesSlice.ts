@@ -85,15 +85,22 @@ export const likeMemory = createAsyncThunk<
 
 export const getMemories = createAsyncThunk<
   IMemory[],
-  { page?: number; limit?: number },
+  { page?: number; limit?: number; search?: string },
   { rejectValue: 404 | 500 | undefined }
 >(
   "memories/getMemories",
-  async ({ page = 0, limit = 5 }, { rejectWithValue }) => {
+  async ({ page = 0, limit = 5, search }, { rejectWithValue }) => {
     try {
-      const response = await axios.get(
-        `http://localhost:5000/api/memory?page=${page}&limit=${limit}`
-      );
+      if (search) {
+        var response = await axios.get(
+          `http://localhost:5000/api/memory?page=${page}&limit=${limit}&search=${search}`
+        );
+      } else {
+        var response = await axios.get(
+          `http://localhost:5000/api/memory?page=${page}&limit=${limit}`
+        );
+      }
+
       const data: IMemory[] = response.data.payload;
 
       return data;
@@ -131,6 +138,12 @@ const memoriesSlice = createSlice({
     },
     pageDown: (state) => {
       state.page--;
+    },    
+    dataReset: (state) => {
+      state.page = 0;
+      state.data = null;
+      state.error = undefined;
+      state.loading = "idle";
     },
   },
   extraReducers: (builder) => {
@@ -193,4 +206,4 @@ const memoriesSlice = createSlice({
 });
 
 export default memoriesSlice.reducer;
-export const { pageUp, pageDown } = memoriesSlice.actions;
+export const { pageUp, pageDown, dataReset } = memoriesSlice.actions;

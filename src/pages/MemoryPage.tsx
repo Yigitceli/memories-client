@@ -28,8 +28,7 @@ const MemoryPage = () => {
     reset,
   } = useForm<Inputs>();
 
-  useEffect(() => {
-    console.log(id);
+  useEffect(() => {    
     dispatch(fetchMemory({ id }));
   }, [id]);
 
@@ -61,7 +60,7 @@ const MemoryPage = () => {
                 <h1 className="font-semibold text-4xl">{data?.memoryTitle}</h1>
                 <div className="flex w-full text-slate-500">
                   {data?.tags.map((tag: string, index) => {
-                    return <span key={index} >#{tag}</span>;
+                    return <span key={index} >#{tag}&nbsp;</span>;
                   })}
                 </div>
                 <p>{data?.memoryMessage}</p>
@@ -76,9 +75,9 @@ const MemoryPage = () => {
                 <hr className="my-2" />
                 <div className="w-full h-[150px] flex gap-2 ">
                   <div className="w-1/2 h-full overflow-auto gap-2">
-                    {data?.comments.map((comment: IComment) => {
+                    {data?.comments.map((comment: IComment, index) => {
                       return (
-                        <div className="flex flex-col w-full">
+                        <div className="flex flex-col w-full" key={index}>
                           <div className="w-full flex gap-2 items-center font-semibold">
                             <img
                               src={comment.photoUrl}

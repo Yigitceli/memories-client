@@ -64,7 +64,7 @@ const Memory: React.FC<IProps> = ({ data }) => {
         <div className="p-5 flex flex-col gap-3 w-full">
           <div className="flex gap-2 text-slate-500">
             {data.tags.map((tag, index) => (
-              <span key={index}>#{tag}</span>
+              <span key={index}>#{tag} </span>
             ))}
           </div>
           <h2 className="text-2xl font-semibold">{data.memoryTitle}</h2>
