@@ -26,7 +26,8 @@ export const makeComment = createAsyncThunk<
     const response = await AuthInstance.post(`/memory/${memory?._id}/comment`, {
       comment,
     });
-    const data = response.data.payload as IMemory;   
+    const data = response.data.payload as IMemory;
+    console.log(data);
     return data;
   } catch (error) {
     const err = error as AxiosError;
