@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios, { AxiosError } from "axios";
 import { Action } from "history";
 import AuthInstance from "../AxiosAuth";
-import { IMemory, IMemoryPage, IUserBody } from "../types";
+import { IComment, IMemory, IMemoryPage, IUserBody } from "../types";
 import { RootState } from "./store";
 
 interface IState {
@@ -18,7 +18,7 @@ const initialState: IState = {
 };
 
 export const makeComment = createAsyncThunk<
-  IMemory,
+  IComment[],
   { comment: string; memory: IMemoryPage },
   { rejectValue: 404 | 500 | undefined }
 >("memories/getMemories", async ({ comment, memory }, { rejectWithValue }) => {
@@ -27,7 +27,7 @@ export const makeComment = createAsyncThunk<
       comment,
     });
     const data = response.data.payload as IMemory;
-    return data;
+    return data.comments;
   } catch (error) {
     const err = error as AxiosError;
     const errorCode: 404 | 500 | undefined = err.response?.status as
@@ -87,9 +87,9 @@ const memorySlice = createSlice({
     );
     builder.addCase(
       makeComment.fulfilled,
-      (state, action: PayloadAction<IMemory>) => {
+      (state, action: PayloadAction<IComment[]>) => {
         if (state.data) {
-          const comments = [...action.payload.comments];
+          const comments = [...action.payload];
           state.data.comments = comments.reverse();
         }
       }
