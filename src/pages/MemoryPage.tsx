@@ -51,11 +51,11 @@ const MemoryPage = () => {
   };
 
   return (
-    <div className="w-full h-[90%] p-4 ">
-      <div className="shadow-final w-full h-full overflow-hidden rounded-3xl flex flex-col">
+    <div className="w-full h-[90%] md:p-4 p-2 ">
+      <div className="shadow-final w-full md:h-full sm:min-h-full md:overflow-hidden rounded-3xl flex flex-col">
         <ShowMemoryPage>
-          <div className="w-full p-4 flex gap-2">
-            <div className="w-1/2 h-full flex flex-col gap-2">
+          <div className="w-full p-4 flex gap-2 md:flex-row flex-col-reverse">
+            <div className="md:w-1/2 w-full md:h-full flex flex-col gap-2">
               <div className="flex flex-col gap-2">
                 <h1 className="font-semibold text-4xl">{data?.memoryTitle}</h1>
                 <div className="flex w-full text-slate-500">
@@ -73,8 +73,8 @@ const MemoryPage = () => {
                 <hr className="my-2" />
                 <p className="font-bold">Realtime Chat - coming soon!</p>
                 <hr className="my-2" />
-                <div className="w-full h-[150px] flex gap-2 ">
-                  <div className="w-1/2 h-full overflow-auto gap-2">
+                <div className="w-full md:h-[150px] h-[350px] flex gap-2 md:flex-row flex-col">
+                  <div className="md:w-1/2 w-full  h-full overflow-auto gap-2">
                     {data?.comments.map((comment: IComment, index) => {
                       return (
                         <div className="flex flex-col w-full" key={index}>
@@ -93,7 +93,7 @@ const MemoryPage = () => {
                   </div>
                   <form
                     onSubmit={handleSubmit(onSubmit)}
-                    className="w-1/2 h-full gap-2 flex flex-col "
+                    className="md:w-1/2 w-full h-full gap-2 flex flex-col "
                   >
                     <p className="text-xl">Write a comment</p>
                     <textarea
@@ -108,9 +108,8 @@ const MemoryPage = () => {
                 </div>
               </div>
             </div>
-            <div className="w-1/2 flex relative items-center justify-center overflow-hidden">
-              <img src={data?.memoryPhotoUrl} className="absolute" />
-            </div>
+            <img src={data?.memoryPhotoUrl} className="md:w-1/2  "/>
+            
           </div>
           <div className="w-full flex flex-col p-3 gap-2 overflow-auto">
             <p className="text-xl">You might also like:</p>

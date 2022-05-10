@@ -50,7 +50,7 @@ function App() {
 
   return (
     <div className="App relative w-full h-screen">
-      <div className="w-full h-screen flex flex-col overflow-hidden">
+      <div className="w-full h-screen flex flex-col md:overflow-hidden relative">
         <NavBar />
         <Routes>
           <Route path="/" element={<Dashboard />} />

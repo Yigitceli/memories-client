@@ -117,7 +117,7 @@ function Create() {
   const [tags, setTags] = React.useState<string[]>(["Example Tag"]);
   return (
     <form
-      className="flex bg-white w-full min-h-42 shadow-final flex-col text-center p-2 gap-3 rounded-md"
+      className="flex bg-white w-full md:min-h-42 md:h-full shadow-final flex-col text-center p-2 gap-3 rounded-md"
       onSubmit={handleSubmit(onSubmit)}
     >
       {uploading != null && <UploadingScreen progress={uploading} />}

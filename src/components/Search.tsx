@@ -25,7 +25,7 @@ const Search:React.FC<IProps> = ({search, setSearch} ) => {
   return (
     <form
       onSubmit={submitHandler}
-      className="bg-white w-full min-h-24 rounded-md shadow-final p-2 flex flex-col gap-3"
+      className="md:bg-white w-full min-h-24 rounded-md md:shadow-final p-2 flex flex-col gap-3"
     >
       <input
         value={search}

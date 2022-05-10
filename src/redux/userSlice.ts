@@ -34,7 +34,7 @@ export const login = createAsyncThunk<
   ) => {
     try {
       if (authType === "google") {
-        const googleData = await googleSignIn();       
+        const googleData = await googleSignIn();
         return googleData;
       }
       if (authType === "custom") {
@@ -47,7 +47,8 @@ export const login = createAsyncThunk<
       removeAuthType();
       const err = error as AxiosError;
       const errorCode: 401 | 500 | undefined = err.response?.status as
-        | 401      | 500
+        | 401
+        | 500
         | undefined;
       return rejectWithValue(errorCode);
     }
@@ -72,6 +73,11 @@ const userSlice = createSlice({
     },
     setError: (state) => {
       state.error = undefined;
+    },
+    setProfilPhoto: (state, action: PayloadAction<string>) => {
+      if (state.data) {
+        state.data.photoUrl = action.payload;
+      }
     },
   },
   extraReducers: (builder) => {
@@ -100,4 +106,4 @@ const userSlice = createSlice({
 });
 
 export default userSlice.reducer;
-export const { logOut, setError } = userSlice.actions;
+export const { logOut, setError,setProfilPhoto } = userSlice.actions;

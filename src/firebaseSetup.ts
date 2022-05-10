@@ -21,3 +21,6 @@ export const storage = getStorage(app);
 export const memoriesRef = (imageName: string) => {
   return ref(storage, `memories/${imageName}`);
 };
+export const usersRef = (userId:string) => {
+  return ref(storage, `users/${userId}`)
+}
