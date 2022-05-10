@@ -28,7 +28,7 @@ const MemoryPage = () => {
     reset,
   } = useForm<Inputs>();
 
-  useEffect(() => {    
+  useEffect(() => {
     dispatch(fetchMemory({ id }));
   }, [id]);
 
@@ -60,7 +60,7 @@ const MemoryPage = () => {
                 <h1 className="font-semibold text-4xl">{data?.memoryTitle}</h1>
                 <div className="flex w-full text-slate-500">
                   {data?.tags.map((tag: string, index) => {
-                    return <span key={index} >#{tag}&nbsp;</span>;
+                    return <span key={index}>#{tag}&nbsp;</span>;
                   })}
                 </div>
                 <p>{data?.memoryMessage}</p>
@@ -108,8 +108,9 @@ const MemoryPage = () => {
                 </div>
               </div>
             </div>
-            <img src={data?.memoryPhotoUrl} className="md:w-1/2  "/>
-            
+            <div className="md:w-1/2 w-full h-full flex items-center justify-center ">
+              <img src={data?.memoryPhotoUrl} className="md:max-w-1/2" />
+            </div>
           </div>
           <div className="w-full flex flex-col p-3 gap-2 overflow-auto">
             <p className="text-xl">You might also like:</p>
