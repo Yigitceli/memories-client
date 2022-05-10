@@ -18,7 +18,7 @@ function Dashboard() {
   const [showCreate, setShowCreate] = useState<boolean>(false);
 
   return (
-    <div className="w-full flex md:flex-row flex-col h-full overflow-hidden">
+    <div className="w-full flex md:flex-row flex-col h-full md:overflow-hidden">
       <div className="w-full flex p-4 justify-between md:hidden">
         <button
           onClick={(e) => {
