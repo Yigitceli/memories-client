@@ -50,18 +50,16 @@ const Memories: React.FC<IProps> = ({ search }) => {
     }
   }, [page, location.key]);
 
-  useEffect(() => {
-    console.log(error);
-  }, [error]);
-
   return (
     <div className="w-full px-4 overflow-auto h-full flex flex-col relative">
-      <p className="my-2 text-lg font-bold w-full text-center">Scroll Down To Fetch More</p>
-      <div className="w-full flex-wrap flex">
+      <p className="my-2 text-lg font-bold w-full text-center">
+        Scroll Down To Fetch More
+      </p>
+      <div className="w-full flex-wrap flex justify-center">
         {data && data.map((data, index) => <Memory data={data} key={index} />)}
       </div>
       <div className="flex w-full justify-center p-2 flex-col items-center">
-        {loading == "pending" && (
+        {loading == "pending" && !error && (
           <ReactLoading
             className="flex items-center justify-center "
             type={"spin"}
@@ -71,7 +69,7 @@ const Memories: React.FC<IProps> = ({ search }) => {
           />
         )}
 
-        {error && <p>There is no more Memory!</p>}
+        {error && <p>No more Memory!</p>}
         <div ref={loader} />
       </div>
     </div>
