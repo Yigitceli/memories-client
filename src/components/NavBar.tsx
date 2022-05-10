@@ -76,7 +76,7 @@ const NavBar = () => {
               <p className="hidden md:block text-black font-bold">{data.displayName}</p>
               <button
                 onClick={logOutHandler}
-                className="w-16 bg-secondary transition ease-in-out duration-100 hover:scale-110 shadow-button px-4 py-2 rounded-md font-bold"
+                className="w-16 md:w-auto bg-secondary transition ease-in-out duration-100 hover:scale-110 shadow-button px-4 py-2 rounded-md font-bold"
               >
                 Sign Out
               </button>
