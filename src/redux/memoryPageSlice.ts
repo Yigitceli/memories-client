@@ -26,7 +26,7 @@ export const makeComment = createAsyncThunk<
     const response = await AuthInstance.post(`/memory/${memory?._id}/comment`, {
       comment,
     });
-    const data = response.data.payload as IMemory;    
+    const data = response.data.payload as IMemory;
     return data;
   } catch (error) {
     const err = error as AxiosError;
@@ -88,11 +88,9 @@ const memorySlice = createSlice({
     builder.addCase(
       makeComment.fulfilled,
       (state, action: PayloadAction<IMemory>) => {
-        console.log(action.payload)
         if (state.data) {
-          state.data.comments.unshift(
-            action.payload.comments[action.payload.comments.length - 1]
-          );
+          const comments = [...action.payload.comments];
+          state.data.comments = comments.reverse();
         }
       }
     );
