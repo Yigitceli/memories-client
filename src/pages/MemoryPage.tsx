@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import AuthInstance from "../AxiosAuth";
 import ShowMemoryPage from "../components/ShowMemoryPage";
-import { fetchMemory } from "../redux/memoryPageSlice";
+import { fetchMemory, makeComment } from "../redux/memoryPageSlice";
 import { RootState, useAppDispatch } from "../redux/store";
 import { IComment } from "../types";
 
@@ -38,14 +38,8 @@ const MemoryPage = () => {
         navigate("/auth");
       } else {
         const comment = inputData.comment;
-        const response = await AuthInstance.post(
-          `/memory/${data?._id}/comment`,
-          {
-            comment,
-          }
-        );
+        dispatch(makeComment({ comment, memory: data! }));
         reset();
-        document.location.reload();
       }
     } catch (error) {}
   };
