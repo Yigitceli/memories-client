@@ -45,7 +45,7 @@ export const googleSignIn = async (): Promise<IUserBody> => {
   setAccessToken(await data.user.getIdToken());
   setAuthType("google");
   const response = await axios.post(
-    `http://localhost:5000/api/user/login?authType=google`,
+    `https://yigit-memories-backend.herokuapp.com/api/user/login?authType=google`,
     { userData: userBody }
   );
   console.log(response);
@@ -58,7 +58,7 @@ export const customSignIn = async (
   data: ILoginBody | undefined
 ): Promise<IUserBody> => {
   const response = await axios.post(
-    "http://localhost:5000/api/user/login?authType=custom",
+    "https://yigit-memories-backend.herokuapp.com/api/user/login?authType=custom",
     { userData: data }
   );
   const { accessToken, refreshToken, UserData } = response.data.payload;

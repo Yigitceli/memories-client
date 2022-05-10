@@ -9,7 +9,7 @@ import {
 } from "./utils";
 
 const AuthInstance = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: "https://yigit-memories-backend.herokuapp.com/api",
   headers: {
     "Content-Type": "application/json",
   },

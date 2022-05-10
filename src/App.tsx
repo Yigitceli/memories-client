@@ -27,7 +27,7 @@ function App() {
       const authType: string = getAuthType() as string;
       try {
         await axios.post(
-          "http://localhost:5000/api/user/refresh-token",
+          "https://yigit-memories-backend.herokuapp.com/api/user/refresh-token",
           {
             refreshToken: getRefreshToken(),
           },

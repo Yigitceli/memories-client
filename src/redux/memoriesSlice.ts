@@ -93,11 +93,11 @@ export const getMemories = createAsyncThunk<
     try {
       if (search) {
         var response = await axios.get(
-          `http://localhost:5000/api/memory?page=${page}&limit=${limit}&search=${search}`
+          `https://yigit-memories-backend.herokuapp.com/api/memory?page=${page}&limit=${limit}&search=${search}`
         );
       } else {
         var response = await axios.get(
-          `http://localhost:5000/api/memory?page=${page}&limit=${limit}`
+          `https://yigit-memories-backend.herokuapp.com/api/memory?page=${page}&limit=${limit}`
         );
       }
 

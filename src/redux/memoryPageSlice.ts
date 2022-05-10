@@ -25,7 +25,7 @@ export const fetchMemory = createAsyncThunk<
   { rejectValue: 404 | 500 | undefined }
 >("memoryPageSlice/fetchMemory", async ({ id }, { rejectWithValue }) => {
   try {
-    const response = await axios.get(`http://localhost:5000/api/memory/${id}`);
+    const response = await axios.get(`https://yigit-memories-backend.herokuapp.com/api/memory/${id}`);
     const data: IMemoryPage = response.data.payload;
     return data;
   } catch (error) {

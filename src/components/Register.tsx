@@ -39,7 +39,7 @@ const Register: React.FC<IProps> = ({ setIsLogin }) => {
     };
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/user/register",
+        "https://yigit-memories-backend.herokuapp.com/api/user/register",
         registerBody
       );
       reset();
