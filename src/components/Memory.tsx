@@ -4,7 +4,6 @@ import { BiLike } from "react-icons/bi";
 import { AiFillLike } from "react-icons/ai";
 import { AiFillDelete } from "react-icons/ai";
 import { BsThreeDots } from "react-icons/bs";
-import Img from "react-cool-img";
 import { ILikeAuthor, IMemory } from "../types";
 import { useSelector } from "react-redux";
 import { RootState, useAppDispatch } from "../redux/store";
