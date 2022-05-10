@@ -26,8 +26,7 @@ export const makeComment = createAsyncThunk<
     const response = await AuthInstance.post(`/memory/${memory?._id}/comment`, {
       comment,
     });
-    const data = response.data.payload as IMemory;
-    console.log(data);
+    const data = response.data.payload as IMemory;    
     return data;
   } catch (error) {
     const err = error as AxiosError;
@@ -49,7 +48,6 @@ export const fetchMemory = createAsyncThunk<
       `https://yigit-memories-backend.herokuapp.com/api/memory/${id}`
     );
     const data: IMemoryPage = response.data.payload;
-
     return data;
   } catch (error) {
     const err = error as AxiosError;
@@ -90,6 +88,7 @@ const memorySlice = createSlice({
     builder.addCase(
       makeComment.fulfilled,
       (state, action: PayloadAction<IMemory>) => {
+        console.log(action.payload)
         if (state.data) {
           state.data.comments.unshift(
             action.payload.comments[action.payload.comments.length - 1]
